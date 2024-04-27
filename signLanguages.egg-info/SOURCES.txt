@@ -1,0 +1,6 @@
+README.md
+setup.py
+signLanguages.egg-info/PKG-INFO
+signLanguages.egg-info/SOURCES.txt
+signLanguages.egg-info/dependency_links.txt
+signLanguages.egg-info/top_level.txt
