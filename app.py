@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 import os.path
 import yaml
 import base64
-
+import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +15,7 @@ class ClientApp:
 
 def decodeImage(imgstring, fileName):
     imgdata = base64.b64decode(imgstring)
-    with open("./data/" + fileName, 'wb') as f:
+    with open("./Data/" + fileName, 'wb') as f:
         f.write(imgdata)
         f.close()
 
@@ -39,11 +39,20 @@ def predictRoute():
         image = request.json['image']
         decodeImage(image, clApp.filename)
 
-        os.system("cd yolov5/ && python detect.py --weights best.pt --img 480 --conf 0.5 --source ../data/inputImage.jpg")
+        os.system("cd yolov5/ && python detect.py --weights best.pt --img 480 --conf 0.5 --source ../Data/inputImage.jpg")
 
         opencodedbase64 = encodeImageIntoBase64("yolov5/runs/detect/exp/inputImage.jpg")
         result = {"image": opencodedbase64.decode('utf-8')}
-        os.system("rm -rf yolov5/runs")
+        # os.system("rm -rf yolov5/runs")
+        directory = "yolov5/runs"
+
+        # Check if directory exists
+        if os.path.exists(directory):
+            # Remove the directory and its contents
+            shutil.rmtree(directory)
+            print("Directory removed successfully.")
+        else:
+            print("Directory does not exist.")
 
     except ValueError as val:
         print(val)
